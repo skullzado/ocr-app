@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { PreviewType } from '../lib/types';
 import { useDropzone } from 'react-dropzone';
-import { imgToText } from '../lib/util';
+import { cn, imgToText } from '../lib/util';
 
 type Props = {
   file: File | null;
@@ -34,26 +34,26 @@ const FileInput = ({ file, preview, setPreview, setText, setFile }: Props) => {
   });
 
   return (
-    <div className="flex flex-col items-center gap-5 p-5">
+    <div className="flex flex-col items-center gap-5 p-5 h-[720px]">
       {file ? <p>{file.name}</p> : <p>No image added</p>}
       <div
-        className="p-5 w-sm h-auto flex items-center justify-center outline-2 outline-slate-950 outline-dashed"
+        className={cn(
+          'h-full p-5 w-full flex items-center justify-center outline-4 outline-slate-400 outline-dashed',
+          isDragActive && 'outline-slate-950'
+        )}
         {...getRootProps()}
       >
         <input {...getInputProps()} multiple={false} accept="image/*" />
-        {!preview &&
-          (isDragActive ? (
-            <p>Drop the image here</p>
-          ) : (
-            <p>Drag 'n' Drop or Click Here to add the image</p>
-          ))}
-
-        {preview && (
+        {isDragActive ? (
+          <p>Drop the image here</p>
+        ) : preview ? (
           <img
             className="w-full h-full object-contain"
             src={preview as string}
             alt="Upload preview"
           />
+        ) : (
+          <p>Drag 'n' Drop or Click Here to add the image.</p>
         )}
       </div>
     </div>

@@ -3,8 +3,7 @@ import { removeComma, splitText } from './lib/util';
 import Header from './components/Header';
 import FileInput from './components/FileInput';
 import { type PreviewType } from './lib/types';
-
-const LIST_ITEM_TITLE: string[] = ['Reference No.', 'Amount PHP'];
+import CopyTextList from './components/CopyTextList';
 
 const App = () => {
   const [preview, setPreview] = useState<PreviewType>(null);
@@ -17,8 +16,10 @@ const App = () => {
     navigator.clipboard.writeText(removeComma(text));
   };
 
+  const textArr: string[] = text ? splitText(text) : [];
+
   return (
-    <div className="flex flex-col h-dvh">
+    <div className="flex flex-col h-full gap-5">
       <Header />
       <FileInput
         preview={preview}
@@ -28,21 +29,10 @@ const App = () => {
         setFile={setFile}
       />
 
-      {splitText(text).length ? (
-        <ul className="w-full items-center flex flex-col">
-          {splitText(text).map((t, index) => (
-            <li
-              className="w-full flex justify-between px-2 py-4 shadow-sm cursor-pointer hover:outline-2 hover:outline-slate-950 rounded-sm"
-              key={t}
-              onClick={() => handleClick(t)}
-            >
-              <span>{LIST_ITEM_TITLE[index]}</span>
-              <span> {removeComma(t) === copy ? '✔ Copied' : t}</span>
-            </li>
-          ))}
-        </ul>
+      {textArr.length ? (
+        <CopyTextList copy={copy} handleClick={handleClick} text={text} />
       ) : (
-        <p className="text-center">No applicable text found</p>
+        <p className="mt-5 text-center">No applicable text found</p>
       )}
     </div>
   );
